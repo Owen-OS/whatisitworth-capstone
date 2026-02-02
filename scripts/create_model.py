@@ -12,7 +12,7 @@ except:
     import prepare_data
 
 
-def fetch_model(model_name: str = "model.bin", use_old=False, save_model=False):
+def fetch_model(model_name: str = "model_v2.bin", use_old=False, save_model=False):
     """
     def fetch_model returns a machine learning model. It can either train a new model, or load an existing model depending on the parameters specified.
     

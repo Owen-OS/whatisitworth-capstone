@@ -56,7 +56,11 @@ iVBORw0KGgoAAAANSUhEUgAAABMAAAF2CAYAAACMHqORAAABzUlEQVR4nO2cwQ3DMAwD3SL7j9v+0s7A
 We can see that price correlates most with make and max_power.
 
 ## 4. Training a Model
-A model can be trained/fetched by using the /scripts/call_model.py library.
+- A model can be trained/fetched by using the /scripts/call_model.py library.
+- To create and save a model, run the following:
+```bash
+python3 scripts/create_model.py
+```
 
 
 ## 5. Running the project.
@@ -118,3 +122,5 @@ docker stop {{CONTAINER_ID}}
 - This project is currently deployed and hosted at the domain [whatisitworth.co.za](https://www.whatisitworth.co.za).
 
 - This is being hosted on a server provided by Digital Ocean. The server is running a docker container, similar to the instructions above.
+
+- This project uses FastAPI to serve the front end.

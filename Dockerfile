@@ -16,7 +16,7 @@ COPY models/model_v2.bin /home/models/
 
 COPY data/ /home/data/
 
-COPY car_results/ /home/car_results/
+#COPY car_results/ /home/car_results/
 
 EXPOSE 80
 
