@@ -91,43 +91,45 @@ def enrich_data(df: pd.DataFrame, save_data:bool =True, use_old: bool=False) -> 
 
     start = time()
 
+    with open("data/all_car_data.json") as f:
+        all_car_data = json.load(f)
+    
 
-    if len(df) > len(os.listdir("car_results")):
+    if len(df) > len(all_car_data):
         
         print(f"Adding full_name column for ease of lookup")
         df["full_name"] = df["title"] + " " + df["variant"]
 
         df["full_name"] = df["full_name"].str.lower().str.replace(" ", "_").str.replace("/", "#")
 
-        with open("data/all_car_data.json", 'r') as f:
-
-            all_car_data = json.load(f)
-
-            for variant, variant_data in tqdm(all_car_data.items()):
 
 
-                specifications = variant_data.get("specifications", {})
-                general_info = specifications.get("General", {})
-                engine_info = specifications.get("Engine", {})
-                handling_info = specifications.get("Handling", {})
-                comfort_info = specifications.get("Comfort", {})
 
-                make = general_info.get("Make", "")
-                model = general_info.get("Model", "")
-                variant = general_info.get("Variant", "")
+        for variant, variant_data in tqdm(all_car_data.items()):
 
-                car_name = f"{make} {model} {variant}".lower().replace(" ", "_").replace("/", "#")
 
-                subset_indexes = list(df[df["full_name"] == car_name].index)
+            specifications = variant_data.get("specifications", {})
+            general_info = specifications.get("General", {})
+            engine_info = specifications.get("Engine", {})
+            handling_info = specifications.get("Handling", {})
+            comfort_info = specifications.get("Comfort", {})
 
-                for feature_set in features:
-                    for feature in feature_set:
-                        val = general_info.get(feature) or engine_info.get(feature) or handling_info.get(feature) or comfort_info.get(feature)
+            make = general_info.get("Make", "")
+            model = general_info.get("Model", "")
+            variant = general_info.get("Variant", "")
 
-                        df_new.loc[subset_indexes, feature] = val
+            car_name = f"{make} {model} {variant}".lower().replace(" ", "_").replace("/", "#")
 
-                # Drop the entries from the old DataFrame so that we can search through a smaller number of rows each time                
-                df = df.drop(index=subset_indexes)
+            subset_indexes = list(df[df["full_name"] == car_name].index)
+
+            for feature_set in features:
+                for feature in feature_set:
+                    val = general_info.get(feature) or engine_info.get(feature) or handling_info.get(feature) or comfort_info.get(feature)
+
+                    df_new.loc[subset_indexes, feature] = val
+
+            # Drop the entries from the old DataFrame so that we can search through a smaller number of rows each time                
+            df = df.drop(index=subset_indexes)
 
 
         print(f"Found cars: {df_new.shape[0]}")
@@ -136,6 +138,8 @@ def enrich_data(df: pd.DataFrame, save_data:bool =True, use_old: bool=False) -> 
         df = df_new
     else:
 
+    
+
         not_found = 0
         for i in tqdm(range(df.shape[0])):
             row = df.loc[i]
@@ -143,14 +147,15 @@ def enrich_data(df: pd.DataFrame, save_data:bool =True, use_old: bool=False) -> 
             title = row["title"].lower().replace("land rover", "land_rover").replace(" ", "_").replace("/", "#")
             variant = row["variant"].lower().replace(" ", "_").replace("/", "_")
 
-            try:
-                file_name = os.path.join("car_results", f"{title}_{variant}.json")
-                with open(file_name) as f:
-                    car_data = json.load(f)
-            except FileNotFoundError:
-                car_data = {}
-                not_found += 1
-                print(f"Could not find car: '{file_name}' ")
+            # try:
+            #     file_name = os.path.join("car_results", f"{title}_{variant}.json")
+            #     with open(file_name) as f:
+            #         car_data = json.load(f)
+            # except FileNotFoundError:
+            #     car_data = {}
+            #     not_found += 1
+            #     print(f"Could not find car: '{file_name}' ")
+            car_data = all_car_data.get(f"{title}_{variant}", {})
     
             specifications = car_data.get("specifications", {})
 
@@ -606,9 +611,9 @@ if __name__ == "__main__":
 
     start = time()
 
-    df, y = prepare_data(df, use_old=False, save_data=True)
+    df, y = prepare_data(df, use_old=False, save_data=True, price_threshold=(0, 1500000))
     end = time()
 
-    print(df.head(30))
+    print(df.head(10))
     print(f"Processing Time: {end - start}s")
 
