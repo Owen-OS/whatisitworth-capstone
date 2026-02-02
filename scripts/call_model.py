@@ -1,8 +1,8 @@
 
-import pandas as pd
-from xgboost import DMatrix
+import pandas as pd     #type: ignore
+from xgboost import DMatrix #type:ignore
 
-import numpy as np
+import numpy as np # type: ignore
 
 import logging
 try:
@@ -14,8 +14,8 @@ except:
 #    model = pickle.load(f)
 
 
-def get_prediction(input_data: dict, model="xboost") -> float:
-    """g
+def get_prediction(input_data: dict, model="xgboost") -> float:
+    """
         Call the model and get a prediction for a car.
 
         :param dict input_data: The input data for the car. Should contain Title, variant, mileage, location, and year.

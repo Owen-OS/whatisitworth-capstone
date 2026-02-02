@@ -1,8 +1,8 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException              #type:ignore
+from fastapi.middleware.cors import CORSMiddleware      #type:ignore
+from fastapi.responses import FileResponse              #type:ignore
+from fastapi.staticfiles import StaticFiles             #type:ignore
+from pydantic import BaseModel                          #type:ignore
 import sys
 import os
 
@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from scripts import call_model
 from scripts import prepare_data
-import pandas as pd
+import pandas as pd             #type:ignore
 import json
 
 print("Making FastAPI app...")

@@ -1,9 +1,9 @@
 # Script to train an XGBoost model and save it using pickle
 
-import xgboost as xgb
-from xgboost import DMatrix
+import xgboost as xgb           #type:ignore
+from xgboost import DMatrix     #type:ignore
 import pickle
-import pandas as pd
+import pandas as pd             #type:ignore
 
 import os
 try:

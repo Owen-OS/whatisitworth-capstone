@@ -1,4 +1,4 @@
-import pandas as pd
+import pandas as pd         #type:ignore
 import json
 import sys
 from time import time

@@ -1,10 +1,10 @@
 
-import pandas as pd
-import numpy as np
+import pandas as pd     #type:ignore
+import numpy as np      #type:ignore
 import json
 import os
 import sys
-from tqdm import tqdm
+from tqdm import tqdm   #type:ignore
 
 from time import time
 
