@@ -44,7 +44,7 @@ def fetch_model(model_name: str = "model.bin", use_old=False, save_model=False):
     #   - We are not fetching an existing model.
     #   - Fetch data for a new model.
     # ================================================================================================================
-    df = pd.read_csv("data/autotrader.csv")
+    df = pd.read_csv("data/raw.csv")
 
     print("Loading in prepared data...")
     df, y = prepare_data.prepare_data(df, save_data=True, use_old=False, price_threshold=(0, 1500000))
@@ -103,4 +103,4 @@ def fetch_model(model_name: str = "model.bin", use_old=False, save_model=False):
     return model
     
 if __name__ == "__main__":
-    fetch_model("model_v2.bin", use_old=False)
+    fetch_model("model_v2.bin", use_old=False, save_model=True)

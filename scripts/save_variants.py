@@ -10,7 +10,7 @@ def create_make_model_json():
     print(f"Running create_make_model_json()...")
 
     print(f"    - Reading in the data...")
-    df = pd.read_csv("data/autotrader.csv")
+    df = pd.read_csv("data/raw.csv")
     print(f"    - Data read.\n")
 
     print(f"    - Isolating the relevant data...")

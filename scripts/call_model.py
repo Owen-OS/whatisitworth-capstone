@@ -29,7 +29,7 @@ def get_prediction(input_data: dict, model="xboost") -> float:
     print("Model loaded.\n")
 
     print(f"Preparing DF...")
-    df_base = pd.read_csv("data/autotrader.csv")
+    df_base = pd.read_csv("data/raw.csv")
     df, _ = prepare_data.prepare_data(df_base, save_data=True, use_old=True)
     print(f"DF prepared.\n")
 

@@ -44,8 +44,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 
-
-
 ## 3. Exploratory Data Analysis (EDA)
 Initial EDA was carried out using the ydata_profiling python library. This compiles a [report](eda_report.html) based on a dataset for easy of viewing. 
 
@@ -57,10 +55,13 @@ iVBORw0KGgoAAAANSUhEUgAAABMAAAF2CAYAAACMHqORAAABzUlEQVR4nO2cwQ3DMAwD3SL7j9v+0s7A
 
 We can see that price correlates most with make and max_power.
 
+## 4. Training a Model
+A model can be trained/fetched by using the /scripts/call_model.py library.
 
-## 4. Running the project.
 
-### 4.1. Creating a virtual environment
+## 5. Running the project.
+
+### 5.1. Creating a virtual environment
 - This project uses `uv` to manage dependancies. To create a virtual environment:
 ```bash
 uv venv
@@ -76,12 +77,12 @@ uv sync
 source .venv/bin/activate
 ```
 
-### 4.2. Running the project outside of Docker:
+### 5.2. Running the project outside of Docker:
 ```bash
 ./run_local.sh
 ```
 
-### 4.3. Runnning with Docker:
+### 5.3. Runnning with Docker:
 - To build the docker container:
 ```bash
 docker build -t whatisitworth .
@@ -113,7 +114,7 @@ docker stop {{CONTAINER_ID}}
 ```
 
 
-## Cloud Deployment
+## 6. Cloud Deployment
 - This project is currently deployed and hosted at the domain [whatisitworth.co.za](https://www.whatisitworth.co.za).
 
 - This is being hosted on a server provided by Digital Ocean. The server is running a docker container, similar to the instructions above.

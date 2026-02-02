@@ -605,7 +605,7 @@ def extract_province(location: str) -> str:
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("data/autotrader.csv")
+    df = pd.read_csv("data/raw.csv")
     
     from time import time
 
