@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚗 What Is It Worth - Car Price Prediction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        select, input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        select:disabled {
+            background: #f5f5f5;
+            cursor: not-allowed;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            display: none;
+        }
+        
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        .result h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .result .price {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .error {
+            background: #f44336;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        .loader.show {
+            display: block;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .result .price {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 What Is It Worth</h1>
+        <p class="subtitle">Enter car details to get an instant price estimate</p>
+        
+        <form id="predictionForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="make">Make</label>
+                    <select id="make" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="model">Model</label>
+                    <select id="model" required disabled>
+                        <option value="">First select a make</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="variant">Variant</label>
+                    <select id="variant" required disabled>
+                        <option value="">First select a model</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="year">Year</label>
+                    <input type="number" id="year" min="1990" max="2030" value="2020" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mileage">Mileage (km)</label>
+                    <input type="number" id="mileage" min="0" value="50000" step="1000" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">City</label>
+                    <select id="location" required>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button type="submit" id="submitBtn">Predict Price</button>
+        </form>
+        
+        <div class="loader" id="loader"></div>
+        
+        <div class="result" id="result">
+            <h2>Predicted Price</h2>
+            <div class="price" id="price"></div>
+        </div>
+        
+        <div class="error" id="error"></div>
+    </div>
+    
+    <script>
+        let makeModelVariants = {};
+        let cities = [];
+        let dataLoaded = false;
+        
+        // Load data on page load
+        async function loadData() {
+            try {
+                console.log('Loading data from /api/data...');
+                const response = await fetch('/api/data');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Data loaded successfully:', data);
+                
+                makeModelVariants = data.make_model_variants;
+                cities = data.cities;
+                
+                populateMakes();
+                populateCities();
+                dataLoaded = true;
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('Failed to load data. Please refresh the page.');
+            }
+        }
+        
+        function populateMakes() {
+            const makeSelect = document.getElementById('make');
+            makeSelect.innerHTML = '<option value="">Select make...</option>';
+            
+            const makes = Object.keys(makeModelVariants).sort();
+            
+            makes.forEach(make => {
+                const option = document.createElement('option');
+                option.value = make;
+                option.textContent = make;
+                makeSelect.appendChild(option);
+            });
+        }
+        
+        function populateCities() {
+            const citySelect = document.getElementById('location');
+            citySelect.innerHTML = '<option value="">Select city...</option>';
+            
+            cities.sort().forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+        
+        // Handle make change
+        document.getElementById('make').addEventListener('change', function() {
+            const make = this.value;
+            const modelSelect = document.getElementById('model');
+            const variantSelect = document.getElementById('variant');
+            
+            // Reset model and variant
+            modelSelect.innerHTML = '<option value="">Select model...</option>';
+            variantSelect.innerHTML = '<option value="">First select a model</option>';
+            variantSelect.disabled = true;
+            
+            if (make && makeModelVariants[make]) {
+                const models = Object.keys(makeModelVariants[make]).sort();
+                models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+                modelSelect.disabled = false;
+            } else {
+                modelSelect.disabled = true;
+            }
+        });
+        
+        // Handle model change
+        document.getElementById('model').addEventListener('change', function() {
+            const make = document.getElementById('make').value;
+            const model = this.value;
+            const variantSelect = document.getElementById('variant');
+            
+            variantSelect.innerHTML = '<option value="">Select variant...</option>';
+            
+            if (make && model && makeModelVariants[make][model]) {
+                const variants = makeModelVariants[make][model];
+                variants.forEach(variant => {
+                    const option = document.createElement('option');
+                    option.value = variant;
+                    option.textContent = variant;
+                    variantSelect.appendChild(option);
+                });
+                variantSelect.disabled = false;
+            } else {
+                variantSelect.disabled = true;
+            }
+        });
+        
+        // Handle form submission
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!dataLoaded) {
+                showError('Data is still loading. Please wait a moment and try again.');
+                return;
+            }
+            
+            const formData = {
+                make: document.getElementById('make').value,
+                model: document.getElementById('model').value,
+                variant: document.getElementById('variant').value,
+                year: parseInt(document.getElementById('year').value),
+                mileage: parseInt(document.getElementById('mileage').value),
+                location: document.getElementById('location').value
+            };
+            
+            console.log('Submitting prediction request:', formData);
+            
+            const button = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            const result = document.getElementById('result');
+            const error = document.getElementById('error');
+            
+            // Show loading state
+            button.disabled = true;
+            button.textContent = 'Predicting...';
+            loader.classList.add('show');
+            result.classList.remove('show');
+            error.classList.remove('show');
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Prediction received:', data);
+                
+                document.getElementById('price').textContent = data.formatted_price;
+                result.classList.add('show');
+            } catch (err) {
+                console.error('Prediction error:', err);
+                showError('Failed to get prediction. Please try again. Error: ' + err.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Predict Price';
+                loader.classList.remove('show');
+            }
+        });
+        
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.classList.add('show');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                error.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Load data when page loads
+        console.log('Page loaded, loading data...');
+        loadData();
+    </script>
+</body>
+</html>

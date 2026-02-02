@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Is It Worth</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #f5f5f7;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.light-mode {
+            background: #fff;
+            color: #1d1d1f;
+        }
+
+        /* Animated gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #000000, #1a1a2e, #0f3460, #16213e);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        body.light-mode .bg-gradient {
+            background: linear-gradient(-45deg, #f5f5f7, #e8e8ed, #d2d2d7, #c7c7cc);
+            background-size: 400% 400%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, #0066ff, #00d4ff);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+            transition: opacity 0.3s ease;
+        }
+
+        body.light-mode .orb1 {
+            opacity: 0.15;
+        }
+
+        .orb2 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, #6366f1, #a855f7);
+            bottom: -150px;
+            left: -150px;
+            animation-delay: 7s;
+            transition: opacity 0.3s ease;
+        }
+
+        body.light-mode .orb2 {
+            opacity: 0.15;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, #a8a8a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        body.light-mode h1 {
+            background: linear-gradient(135deg, #1d1d1f 0%, #6e6e73 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #a8a8a8;
+            font-weight: 400;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        body.light-mode .subtitle {
+            color: #6e6e73;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        body.light-mode .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #a8a8a8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        body.light-mode label {
+            color: #6e6e73;
+        }
+
+        select, input {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 16px;
+            color: #f5f5f7;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.light-mode select,
+        body.light-mode input {
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            color: #1d1d1f;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #0066ff;
+            box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
+        }
+
+        body.light-mode select:focus,
+        body.light-mode input:focus {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        select option {
+            background: #1a1a1a;
+            color: #f5f5f7;
+        }
+
+        body.light-mode select option {
+            background: #ffffff;
+            color: #1d1d1f;
+        }
+
+        /* Theme Toggle Switch */
+        .theme-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        body.light-mode .toggle-switch {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #0066ff, #00d4ff);
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(28px);
+            background: linear-gradient(135deg, #ffd60a, #ffa500);
+        }
+
+        button {
+            background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+            margin-top: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        button:hover:not(:disabled)::before {
+            opacity: 1;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 102, 255, 0.4);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 40px;
+            padding: 48px;
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 24px;
+            text-align: center;
+            display: none;
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #a8a8a8;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .result .price {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #0066ff 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            display: none;
+            font-size: 0.95rem;
+            animation: shake 0.4s;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .loader {
+            display: none;
+            width: 48px;
+            height: 48px;
+            margin: 32px auto;
+            position: relative;
+        }
+
+        .loader.show {
+            display: block;
+        }
+
+        .loader::after {
+            content: '';
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(0, 102, 255, 0.2);
+            border-top: 3px solid #0066ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 60px 20px 30px;
+            }
+
+            .card {
+                padding: 32px 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .result {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+
+    <div class="theme-toggle">
+        <div class="toggle-switch" id="themeToggle">
+            <div class="toggle-slider">🌙</div>
+        </div>
+    </div>
+
+    <header>
+        <h1>What is it worth?</h1>
+        <p class="subtitle">Instant car valuations powered by Machine Learning</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <form id="predictionForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="make">Make</label>
+                        <select id="make" required>
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="model">Model</label>
+                        <select id="model" required disabled>
+                            <option value="">First select a make</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="variant">Variant</label>
+                        <select id="variant" required disabled>
+                            <option value="">First select a model</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="number" id="year" min="1900" max="2026" value="2020" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mileage">Mileage (km)</label>
+                        <input type="number" id="mileage" min="0" value="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="province">Province</label>
+                        <select id="province" required>
+                            <option value="">Loading...</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" id="submitBtn">Get Valuation</button>
+            </form>
+            
+            <div class="loader" id="loader"></div>
+            
+            <div class="result" id="result">
+                <h2>Estimated Value</h2>
+                <div class="price" id="price"></div>
+            </div>
+            
+            <div class="error" id="error"></div>
+        </div>
+    </div>
+    
+    <script>
+        let makeModelVariants = {};
+        let provinces = [];
+        let dataLoaded = false;
+        
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const toggleSlider = themeToggle.querySelector('.toggle-slider');
+        
+        // Check for saved theme preference or default to dark
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        if (currentTheme === 'light') {
+            document.body.classList.add('light-mode');
+            themeToggle.classList.add('active');
+            toggleSlider.textContent = '☀️';
+        }
+        
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('light-mode');
+            themeToggle.classList.toggle('active');
+            
+            if (document.body.classList.contains('light-mode')) {
+                toggleSlider.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            } else {
+                toggleSlider.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+        
+        async function loadData() {
+            try {
+                console.log('Loading data from /api/data...');
+                const response = await fetch('/api/data');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Data loaded successfully:', data);
+                
+                makeModelVariants = data.make_model_variants;
+                provinces = data.provinces;
+                
+                populateMakes();
+                populateProvinces();
+                dataLoaded = true;
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showError('Failed to load data. Please refresh the page.');
+            }
+        }
+        
+        function populateMakes() {
+            const makeSelect = document.getElementById('make');
+            makeSelect.innerHTML = '<option value="">Select make...</option>';
+            
+            const makes = Object.keys(makeModelVariants).sort();
+            
+            makes.forEach(make => {
+                const option = document.createElement('option');
+                option.value = make;
+                option.textContent = make;
+                makeSelect.appendChild(option);
+            });
+        }
+        
+        function populateProvinces() {
+            const provinceSelect = document.getElementById('province');
+            provinceSelect.innerHTML = '<option value="">Select province...</option>';
+
+            provinces.sort().forEach(province => {
+                const option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                provinceSelect.appendChild(option);
+            });
+        }
+        
+        document.getElementById('make').addEventListener('change', function() {
+            const make = this.value;
+            const modelSelect = document.getElementById('model');
+            const variantSelect = document.getElementById('variant');
+            
+            modelSelect.innerHTML = '<option value="">Select model...</option>';
+            variantSelect.innerHTML = '<option value="">First select a model</option>';
+            variantSelect.disabled = true;
+            
+            if (make && makeModelVariants[make]) {
+                const models = Object.keys(makeModelVariants[make]).sort();
+                models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+                modelSelect.disabled = false;
+            } else {
+                modelSelect.disabled = true;
+            }
+        });
+        
+        document.getElementById('model').addEventListener('change', function() {
+            const make = document.getElementById('make').value;
+            const model = this.value;
+            const variantSelect = document.getElementById('variant');
+            
+            variantSelect.innerHTML = '<option value="">Select variant...</option>';
+            
+            if (make && model && makeModelVariants[make][model]) {
+                const variants = makeModelVariants[make][model];
+                variants.forEach(variant => {
+                    const option = document.createElement('option');
+                    option.value = variant;
+                    option.textContent = variant;
+                    variantSelect.appendChild(option);
+                });
+                variantSelect.disabled = false;
+            } else {
+                variantSelect.disabled = true;
+            }
+        });
+        
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!dataLoaded) {
+                showError('Data is still loading. Please wait a moment and try again.');
+                return;
+            }
+            
+            const formData = {
+                make: document.getElementById('make').value,
+                model: document.getElementById('model').value,
+                variant: document.getElementById('variant').value,
+                year: parseInt(document.getElementById('year').value),
+                mileage: parseInt(document.getElementById('mileage').value),
+                province: document.getElementById('province').value
+            };
+            
+            console.log('Submitting prediction request:', formData);
+            
+            const button = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            const result = document.getElementById('result');
+            const error = document.getElementById('error');
+            
+            button.disabled = true;
+            button.textContent = 'Calculating...';
+            loader.classList.add('show');
+            result.classList.remove('show');
+            error.classList.remove('show');
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Prediction received:', data);
+                
+                document.getElementById('price').textContent = data.formatted_price;
+                result.classList.add('show');
+            } catch (err) {
+                console.error('Prediction error:', err);
+                showError('Failed to get prediction. Please try a different vehicle.');
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Get Valuation';
+                loader.classList.remove('show');
+            }
+        });
+        
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.classList.add('show');
+            
+            setTimeout(() => {
+                error.classList.remove('show');
+            }, 5000);
+        }
+        
+        console.log('Page loaded, loading data...');
+        loadData();
+    </script>
+</body>
+</html>
