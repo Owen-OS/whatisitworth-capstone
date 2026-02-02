@@ -14,8 +14,8 @@ except:
 #    model = pickle.load(f)
 
 
-def get_prediction(input_data: dict, model="xgboost") -> float:
-    """
+def get_prediction(input_data: dict, model="xboost") -> float:
+    """g
         Call the model and get a prediction for a car.
 
         :param dict input_data: The input data for the car. Should contain Title, variant, mileage, location, and year.
